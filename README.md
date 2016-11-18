@@ -37,7 +37,7 @@ Twenty-six letters in the English alphabet means twenty-six LEDs. Conveniently, 
 
 (Multiplexing the GPIO pins to require fewer of them is left as an exercise for the reader, or possibly for version 2.)
 
-![picture of the breadboard](https://gist.github.com/CraigCottingham/9bbf719bd850907026b63742af59653b#file-upsidedownleds-prototype_bb-svg)
+![picture of the breadboard](https://www.evernote.com/l/AHdGaO3zeEZKKqKnT3avZ5fb45XkTmazFw0/image.png)
 
 The assignment of pins to LEDs was driven by the lengths of the jumper wires I had available and the layout of GPIO pins on the breakout board. If I ever get around to making a PCB for this, I'll make it less haphazard.
 
