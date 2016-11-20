@@ -127,4 +127,16 @@ iex(1)> 2 + 3
 iex(2)>
 ```
 
-To access the GPIO pins, I'll use [elixir_ale](https://github.com/fhunleth/elixir_ale).
+To access the GPIO pins, I'll employ [elixir_ale](https://github.com/fhunleth/elixir_ale). After installing it as a dependency in `mix.exs` and running `mix deps.get`, it's straightforward to use.
+
+```elixir
+iex(1)> {:ok, pid} = Gpio.start_link(4, :output)
+{:ok, #PID<0.235.0>}
+iex(2)> Gpio.write(pid, 1)
+:ok
+iex(3)> Gpio.write(pid, 0)
+:ok
+iex(4)>
+```
+
+You can't see it from where you're sitting (unless you're playing along at home with your own Raspberry Pi), but the "A" LED just turned on and off again.
