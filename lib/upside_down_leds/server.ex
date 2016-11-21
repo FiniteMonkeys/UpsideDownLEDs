@@ -56,7 +56,7 @@ defmodule UpsideDownLeds.Server do
     }
   end
 
-  def handle_cast({:puts, str}, _from, pin_map) do
+  def handle_cast({:puts, str}, pin_map) do
     str
       |> String.to_charlist
       |> Enum.each(
