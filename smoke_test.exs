@@ -1,4 +1,4 @@
-defmodule UpsidedownLeds.SmokeTest do
+defmodule SmokeTest do
   defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
     Gpio.write(pid, 1)
     :timer.sleep(delay_during)
@@ -45,3 +45,5 @@ defmodule UpsidedownLeds.SmokeTest do
     "HELLO" |> String.to_charlist |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid); end)
   end
 end
+
+SmokeTest.go
