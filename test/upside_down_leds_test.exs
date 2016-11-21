@@ -1,6 +1,6 @@
-defmodule UpsidedownLedsTest do
+defmodule UpsideDownLedsTest do
   use ExUnit.Case
-  doctest UpsidedownLeds
+  doctest UpsideDownLeds
 
   test "the truth" do
     assert 1 + 1 == 2

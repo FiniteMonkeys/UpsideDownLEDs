@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :upsidedown_leds, key: :value
+#     config :upside_down_leds, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:upsidedown_leds, :key)
+#     Application.get_env(:upside_down_leds, :key)
 #
 # Or configure a 3rd-party app:
 #
