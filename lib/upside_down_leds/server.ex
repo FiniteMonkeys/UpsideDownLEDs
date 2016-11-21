@@ -1,10 +1,10 @@
-defmodule UpsideDownLeds.Registry do
+defmodule UpsideDownLeds.Server do
   use GenServer
 
   ## client API
 
   @doc """
-  Starts the registry.
+  Starts the server.
   """
   def start_link do
     GenServer.start_link(__MODULE__, :ok, [])
@@ -59,7 +59,16 @@ defmodule UpsideDownLeds.Registry do
   def handle_call({:puts, str}, _from, pin_map) do
     str
       |> String.to_charlist
-      |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid); end)
+      |> Enum.each(
+           fn letter ->
+             case Map.fetch(pin_map, to_string([letter])) do
+               {:ok, pid} ->
+                 blink(pid, 500, 500)
+               _ ->
+                 :timer.sleep(1000)
+             end
+           end
+         )
 
     {:reply, str, pin_map}
   end
