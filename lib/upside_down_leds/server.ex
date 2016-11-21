@@ -70,7 +70,7 @@ defmodule UpsideDownLeds.Server do
            end
          )
 
-    {:reply, str, pin_map}
+    {:noreply, pin_map}
   end
 
   defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
