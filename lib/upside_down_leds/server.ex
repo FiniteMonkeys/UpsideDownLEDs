@@ -16,7 +16,7 @@ defmodule UpsideDownLeds.Server do
   Returns `{:ok, pid}` on success, `:error` otherwise.
   """
   def puts(server, str) do
-    GenServer.call(server, {:puts, str})
+    GenServer.cast(server, {:puts, str})
   end
 
   ## server callbacks
@@ -56,7 +56,7 @@ defmodule UpsideDownLeds.Server do
     }
   end
 
-  def handle_call({:puts, str}, _from, pin_map) do
+  def handle_cast({:puts, str}, _from, pin_map) do
     str
       |> String.to_charlist
       |> Enum.each(
