@@ -1,7 +1,7 @@
 defmodule UpsideDownLeds.Registry do
   use GenServer
 
-  ## Client API
+  ## client API
 
   @doc """
   Starts the registry.
@@ -11,37 +11,63 @@ defmodule UpsideDownLeds.Registry do
   end
 
   @doc """
-  Looks up the bucket pid for `name` stored in `server`.
+  Displays the string on the LEDs.
 
-  Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
+  Returns `{:ok, pid}` on success, `:error` otherwise.
   """
-  def lookup(server, name) do
-    GenServer.call(server, {:lookup, name})
+  def puts(server, str) do
+    GenServer.call(server, {:puts, str})
   end
 
-  @doc """
-  Ensures there is a bucket associated to the given `name` in `server`.
-  """
-  def create(server, name) do
-    GenServer.cast(server, {:create, name})
-  end
-
-  ## Server Callbacks
+  ## server callbacks
 
   def init(:ok) do
-    {:ok, %{}}
+    {
+      :ok,
+      %{
+        "A" => 4,
+        "B" => 2,
+        "C" => 27,
+        "D" => 22,
+        "E" => 26,
+        "F" => 19,
+        "G" => 13,
+        "H" => 6,
+        "I" => 5,
+        "J" => 11,
+        "K" => 9,
+        "L" => 10,
+        "M" => 3,
+        "N" => 14,
+        "O" => 15,
+        "P" => 8,
+        "Q" => 18,
+        "R" => 23,
+        "S" => 21,
+        "T" => 17,
+        "U" => 24,
+        "V" => 25,
+        "W" => 7,
+        "X" => 12,
+        "Y" => 16,
+        "Z" => 20,
+      } |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = Gpio.start_link(pin_no, :output); {letter, pid} end)
+        |> Enum.into(%{})
+    }
   end
 
-  def handle_call({:lookup, name}, _from, names) do
-    {:reply, Map.fetch(names, name), names}
+  def handle_call({:puts, str}, _from, pin_map) do
+    str
+      |> String.to_charlist
+      |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid); end)
+
+    {:reply, str, pin_map}
   end
 
-  def handle_cast({:create, name}, names) do
-    if Map.has_key?(names, name) do
-      {:noreply, names}
-    else
-      {:ok, bucket} = KV.Bucket.start_link
-      {:noreply, Map.put(names, name, bucket)}
-    end
+  defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
+    Gpio.write(pid, 1)
+    :timer.sleep(delay_during)
+    Gpio.write(pid, 0)
+    :timer.sleep(delay_after)
   end
 end
