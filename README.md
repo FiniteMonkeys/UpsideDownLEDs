@@ -84,7 +84,7 @@ blink(pindefs["O"])
 GPIO.cleanup()
 ```
 
-When I run this on the Raspberry Pi, each of the LEDs lights up in sequence, then it blinks out the word `HELLO`.
+When I run this on the Raspberry Pi (via `python smoke_test.py`), each of the LEDs lights up in sequence, then it blinks out the word `HELLO`.
 
 ### Step 2: Elixir
 
@@ -210,3 +210,9 @@ iex(4)>
 ```
 
 There's blinking lights. Trust me&mdash;they're the best blinking lights. They're yuuge.
+
+### Step 4: The ghost in the machine
+
+In the show, the blinking lights are used to receive messages from an unseen messenger in an otherworldly, forbidding place. I, too, wanted to receive messages from unseen messengers in an otherworldly, forbidding place.
+
+In other words, Twitter.
