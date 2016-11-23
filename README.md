@@ -194,3 +194,19 @@ SmokeTest.go
 ```
 
 Running this (via `mix run smoke_test.exs`) produces the same output as the Python script above.
+
+### Step 3: Adding a GenServer
+
+I'm going to want this code to eventually be persistent and long-lived, so it seems like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/server.ex`.
+
+```elixir
+iex(1)> {:ok, server} = UpsideDownLeds.Server.start_link
+{:ok, #PID<0.235.0>}
+iex(2)> UpsideDownLeds.Server.puts(server, "HELLO")
+:ok
+iex(3)> UpsideDownLeds.Server.puts(server, "ELEVEN LOVES EGGOS")
+:ok
+iex(4)>
+```
+
+There's blinking lights. Trust me&mdash;they're the best blinking lights. They're yuuge.
