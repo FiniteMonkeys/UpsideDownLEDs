@@ -29,7 +29,8 @@ defmodule UpsideDownLeds.Mixfile do
   defp deps do
     [
       {:elixir_ale, "~> 0.5.6"},
-      {:extwitter, "~> 0.7.0"}
+      {:extwitter, "~> 0.7.0"},
+      {:oauth, git: "https://github.com/tim/erlang-oauth.git"}
     ]
   end
 end
