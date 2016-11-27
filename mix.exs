@@ -14,7 +14,7 @@ defmodule UpsideDownLeds.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :extwitter]]
   end
 
   # Dependencies can be Hex packages:
@@ -28,7 +28,9 @@ defmodule UpsideDownLeds.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:elixir_ale, "~> 0.5.6"}
+      {:elixir_ale, "~> 0.5.6"},
+      {:extwitter, "~> 0.7.0"},
+      {:oauth, git: "https://github.com/tim/erlang-oauth.git"}
     ]
   end
 end
