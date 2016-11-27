@@ -16,7 +16,7 @@ defmodule UpsideDownLeds.BlinkingLights do
   Returns `{:ok, pid}` on success, `:error` otherwise.
   """
   def puts(server, str) do
-    GenServer.cast(server, {:puts, str})
+    GenServer.cast(server, {:puts, str |> String.upcase |> String.replace(~r/[^A-Z ]+/, "")})
   end
 
   ## server callbacks
