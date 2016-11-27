@@ -200,11 +200,11 @@ Running this (via `mix run smoke_test.exs`) produces the same output as the Pyth
 I'm going to want this code to eventually be persistent and long-lived, so it seems like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/blinking_lights.ex`.
 
 ```elixir
-iex(1)> {:ok, server} = UpsideDownLeds.BlinkingLights.start_link
+iex(1)> {:ok, lights} = UpsideDownLeds.BlinkingLights.start_link
 {:ok, #PID<0.235.0>}
-iex(2)> UpsideDownLeds.BlinkingLights.puts(server, "HELLO")
+iex(2)> UpsideDownLeds.BlinkingLights.puts(lights, "HELLO")
 :ok
-iex(3)> UpsideDownLeds.BlinkingLights.puts(server, "ELEVEN LOVES EGGOS")
+iex(3)> UpsideDownLeds.BlinkingLights.puts(lights, "ELEVEN LOVES EGGOS")
 :ok
 iex(4)>
 ```
