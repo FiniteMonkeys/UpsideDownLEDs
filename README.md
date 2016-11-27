@@ -197,14 +197,14 @@ Running this (via `mix run smoke_test.exs`) produces the same output as the Pyth
 
 ### Step 3: Adding a GenServer
 
-I'm going to want this code to eventually be persistent and long-lived, so it seems like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/server.ex`.
+I'm going to want this code to eventually be persistent and long-lived, so it seems like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/blinking_lights.ex`.
 
 ```elixir
-iex(1)> {:ok, server} = UpsideDownLeds.Server.start_link
+iex(1)> {:ok, server} = UpsideDownLeds.BlinkingLights.start_link
 {:ok, #PID<0.235.0>}
-iex(2)> UpsideDownLeds.Server.puts(server, "HELLO")
+iex(2)> UpsideDownLeds.BlinkingLights.puts(server, "HELLO")
 :ok
-iex(3)> UpsideDownLeds.Server.puts(server, "ELEVEN LOVES EGGOS")
+iex(3)> UpsideDownLeds.BlinkingLights.puts(server, "ELEVEN LOVES EGGOS")
 :ok
 iex(4)>
 ```
@@ -264,6 +264,7 @@ will print out the most recent three tweets containing `upside down`.
 
 #### Streaming API
 
+```elixir
 Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> stream = ExTwitter.stream_filter(track: "@UpsideDownLEDs") |>
 ...(1)> Stream.map(fn tweet -> tweet.text end) |>
@@ -275,3 +276,7 @@ iex(2)> Enum.to_list(stream)
 ```
 
 will print out all references to the `@UpsideDownLEDs` Twitter handle as they appear in the Twitter firehose stream.
+
+### Step 5: Putting together the pieces
+
+So far, I have code that takes a string and displays it on the blinking LEDs, and code that receives messages from Twitter. It's time to tie those two together.

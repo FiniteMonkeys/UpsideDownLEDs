@@ -1,4 +1,4 @@
-defmodule UpsideDownLeds.Server do
+defmodule UpsideDownLeds.BlinkingLights do
   use GenServer
 
   ## client API
