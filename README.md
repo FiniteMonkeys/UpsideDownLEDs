@@ -30,10 +30,10 @@ I already had everything I needed on hand.
 * A breakout board for the Pi's GPIO connector (similar to the [Sparkfun Pi Wedge](https://www.sparkfun.com/products/retired/13091), but not as nice)
 * A breadboard
 * 26 LEDs of assorted colors
-* 26 220&ohm; resistors
+* 2 220&ohm; resistors
 * A bunch of jumper wires
 
-Twenty-six letters in the English alphabet means twenty-six LEDs. Conveniently, the Raspberry Pi Model B+ has twenty-six GPIO pins. That should make for a relatively simple and straightforward circuit design.
+Twenty-six letters in the English alphabet means twenty-six LEDs. Conveniently, the Raspberry Pi Model B+ has twenty-six GPIO pins. That made for a relatively simple and straightforward circuit design.
 
 (Multiplexing the GPIO pins to require fewer of them is left as an exercise for the reader, or possibly for version 2.)
 
@@ -47,7 +47,7 @@ I started with a fresh install of [Raspbian](https://www.raspberrypi.org/downloa
 
 ### Step 1: The smoke test
 
-Raspbian comes with a Python library for controlling the GPIO pins already installed, so that's as good a place to start as any.
+Raspbian comes with a Python library for controlling the GPIO pins already installed, so that was as good a place to start as any.
 
 ```python
 import RPi.GPIO as GPIO
@@ -88,9 +88,9 @@ When I run this on the Raspberry Pi (via `python smoke_test.py`), each of the LE
 
 ### Step 2: Elixir
 
-Python's all well and good, but can I do the same thing using Elixir?
+Python's all well and good, but could I do the same thing using Elixir?
 
-Unlike Python, Raspbian doesn't come with Elixir installed. The available APT packages for Erlang and Elixir are out of date, so I'm going to build from source.
+Unlike Python, Raspbian doesn't come with Elixir installed. The available APT packages for Erlang and Elixir are out of date, so I built fresh from source.
 
 ```bash
 # make sure the apt cache is up to date
@@ -127,7 +127,7 @@ iex(1)> 2 + 3
 iex(2)>
 ```
 
-To access the GPIO pins, I'll employ [elixir_ale](https://github.com/fhunleth/elixir_ale). After installing it as a dependency in `mix.exs` and running `mix deps.get`, it's straightforward to use.
+To access the GPIO pins, I employed [elixir_ale](https://github.com/fhunleth/elixir_ale). After installing it as a dependency in `mix.exs` and running `mix deps.get`, it was straightforward to use.
 
 ```elixir
 iex(1)> {:ok, pid} = Gpio.start_link(4, :output)
@@ -197,7 +197,7 @@ Running this (via `mix run smoke_test.exs`) produces the same output as the Pyth
 
 ### Step 3: Adding a GenServer
 
-I'm going to want this code to eventually be persistent and long-lived, so it seems like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/blinking_lights.ex`.
+I wanted this code to eventually be persistent and long-lived, so it seemed like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/blinking_lights.ex`.
 
 ```elixir
 iex(1)> {:ok, lights} = UpsideDownLeds.BlinkingLights.start_link
@@ -217,7 +217,7 @@ In the show, the blinking lights are used to receive messages from an unseen mes
 
 In other words, Twitter.
 
-I reserved the Twitter handle [@UpsideDownLEDs](https://twitter.com/UpsideDownLEDs) so that messages sent to it will be displayed on the blinking lights. To be able to receive them on the Raspberry Pi, I'm going to use the [ExTwitter](https://github.com/parroty/extwitter) library.
+I reserved the Twitter handle [@UpsideDownLEDs](https://twitter.com/UpsideDownLEDs) so that messages sent to it will be displayed on the blinking lights. To be able to receive them on the Raspberry Pi, I used the [ExTwitter](https://github.com/parroty/extwitter) library.
 
 ```elixir
 def application do
@@ -248,7 +248,7 @@ config :extwitter, :oauth, [
 
 (I'm not including the secret values here or in the file in Github, and you shouldn't either.)
 
-There are two flavors of API that can be used. I'll use the search API as a one-off to test access to the Twitter API, and the streaming API to actually listen for messages to display.
+There are two flavors of API that can be used. I used the search API as a one-off to test access to the Twitter API, and the streaming API to actually listen for messages to display.
 
 #### Search API
 
@@ -279,4 +279,4 @@ will print out all references to the `@UpsideDownLEDs` Twitter handle as they ap
 
 ### Step 5: Putting together the pieces
 
-So far, I have code that takes a string and displays it on the blinking LEDs, and code that receives messages from Twitter. It's time to tie those two together.
+So far, I had code that takes a string and displays it on the blinking LEDs, and code that receives messages from Twitter. It was time to tie those two together.
