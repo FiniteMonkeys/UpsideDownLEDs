@@ -277,9 +277,9 @@ iex(2)> Enum.to_list(stream)
 
 will print out all references to the `@UpsideDownLEDs` Twitter handle as they appear in the Twitter firehose stream.
 
-### Step 5: Putting together the pieces
-
 I wrapped the ExTwitter code in another GenServer similar to the one for the blinking lights; the result is in `lib/upside_down_leds/twitter_listener.ex`.
+
+### Step 5: Putting together the pieces
 
 ```elixir
 Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
