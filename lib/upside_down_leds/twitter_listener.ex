@@ -34,7 +34,7 @@ defmodule UpsideDownLeds.TwitterListener do
     {:ok, pid}
   end
 
-  def terminate(reason, state) do
+  def terminate(_reason, state) do
     cond do
       %{pid: pid} = state ->
         IO.puts "stopping stream filter"
