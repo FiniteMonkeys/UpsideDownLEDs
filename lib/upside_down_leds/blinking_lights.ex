@@ -21,6 +21,10 @@ defmodule UpsideDownLeds.BlinkingLights do
 
   ## server callbacks
 
+  @delay_during        500
+  @delay_after         500
+  @delay_nonprinting  1000
+
   def init(:ok) do
     {
       :ok,
@@ -63,9 +67,9 @@ defmodule UpsideDownLeds.BlinkingLights do
            fn letter ->
              case Map.fetch(pin_map, to_string([letter])) do
                {:ok, pid} ->
-                 blink(pid, 500, 500)
+                 blink(pid)
                _ ->
-                 :timer.sleep(1000)
+                 :timer.sleep(@delay_nonprinting)
              end
            end
          )
@@ -73,7 +77,7 @@ defmodule UpsideDownLeds.BlinkingLights do
     {:noreply, pin_map}
   end
 
-  defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
+  defp blink(pid, delay_during \\ @delay_during, delay_after \\ @delay_after) do
     Gpio.write(pid, 1)
     :timer.sleep(delay_during)
     Gpio.write(pid, 0)
