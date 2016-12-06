@@ -12,7 +12,7 @@ defmodule UpsideDownLeds.Master do
 
   ## server callbacks
 
-  def init(options \\ {}) do
+  def init(_options \\ {}) do
     {:ok, lights} = UpsideDownLeds.BlinkingLights.start_link
     {:ok, twitter} = UpsideDownLeds.TwitterListener.start_link({ fn text -> UpsideDownLeds.BlinkingLights.puts(lights, text) end })
     {:ok, lights: lights, twitter: twitter}
