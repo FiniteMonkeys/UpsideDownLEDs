@@ -281,14 +281,25 @@ I wrapped the ExTwitter code in another GenServer similar to the one for the bli
 
 ### Step 5: Putting together the pieces
 
+One key difference between `UpsideDownLeds.BlinkingLights` and `UpsideDownLeds.TwitterListener` is that an anonymous function is passed to `UpsideDownLeds.TwitterListener.start_link`. The latter uses the anonymous function to "write" the tweet text to the former.
+
 ```elixir
 Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> {:ok, lights} = UpsideDownLeds.BlinkingLights.start_link
 {:ok, #PID<0.147.0>}
-iex(2)> {:ok, twitter} = UpsideDownLeds.TwitterListener.start_link %{lights: lights}
+iex(2)> {:ok, twitter} = UpsideDownLeds.TwitterListener.start_link { fn text -> UpsideDownLeds.BlinkingLights.puts(lights, text) end }
 {:ok, #PID<0.175.0>}
 starting stream filter
 iex(3)>
 ```
 
 Two processes are created and linked. Now, any tweets that start with `@UpsideDownLEDs` will be displayed on the blinking lights.
+
+To make it a little simpler, `lib/upside_down_leds.ex` now contains a GenServer as well that starts and links the other two modules. Firing up the app is now simpler.
+
+```elixir
+Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> {:ok, pid} = UpsideDownLeds.start_link
+{:ok, #PID<0.147.0>}
+iex(2)>
+```
