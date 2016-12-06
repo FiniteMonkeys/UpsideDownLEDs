@@ -14,7 +14,7 @@ defmodule UpsideDownLeds.Master do
 
   def init do
     {:ok, lights} = UpsideDownLeds.BlinkingLights.start_link
-    {:ok, twitter} = UpsideDownLeds.TwitterListener.start_link(fn text -> UpsideDownLeds.BlinkingLights.puts(lights, text); text end)
+    {:ok, twitter} = UpsideDownLeds.TwitterListener.start_link({ fn text -> UpsideDownLeds.BlinkingLights.puts(lights, text) end })
     {:ok, lights: lights, twitter: twitter}
   end
 end
