@@ -277,6 +277,8 @@ iex(2)> Enum.to_list(stream)
 
 will print out all references to the `@UpsideDownLEDs` Twitter handle as they appear in the Twitter firehose stream.
 
+I wrapped the ExTwitter code in another GenServer similar to the one for the blinking lights; the result is in `lib/upside_down_leds/twitter_listener.ex`.
+
 ### Step 5: Putting together the pieces
 
 So far, I had code that takes a string and displays it on the blinking LEDs, and code that receives messages from Twitter. It was time to tie those two together.
