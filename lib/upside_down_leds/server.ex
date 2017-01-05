@@ -22,8 +22,8 @@ defmodule UpsideDownLeds.Server do
 
   Returns `{:ok, pid}` on success, `:error` otherwise.
   """
-  def puts(server, str) do
-    GenServer.cast(server, {:puts, str})
+  def puts(str) do
+    GenServer.cast(__MODULE__, {:puts, str})
   end
 
   ##
