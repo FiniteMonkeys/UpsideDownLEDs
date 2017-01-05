@@ -18,7 +18,7 @@ defmodule UpsideDownLeds.Supervisor do
 
   def init(:ok) do
     children = [
-      worker(UpsideDownLeds.Server, self)
+      worker(UpsideDownLeds.Server, [self])
     ]
     supervise(children, strategy: :one_for_all)
   end
