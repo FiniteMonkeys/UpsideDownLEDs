@@ -43,16 +43,16 @@ defmodule UpsideDownLeds.Server do
   end
 
   def handle_info(:start_twitter_listener, state = %{pid_sv: pid_sv}) do
-    {:ok, pid_twitter_listener} = Supervisor.start_child(pid_sv, worker(UpsideDownLeds.TwitterListener, {pid_server: self}))
+    {:ok, pid_twitter_listener} = Supervisor.start_child(pid_sv, worker(UpsideDownLeds.TwitterListener, [pid_server: self]))
     {:noreply, %{state | pid_twitter_listener: pid_twitter_listener}}
   end
 
   def handle_info(:start_blinking_lights, state = %{pid_sv: pid_sv}) do
-    {:ok, pid_blinking_lights} = Supervisor.start_child(pid_sv, worker(UpsideDownLeds.BlinkingLights, {pid_server: self}))
+    {:ok, pid_blinking_lights} = Supervisor.start_child(pid_sv, worker(UpsideDownLeds.BlinkingLights, [pid_server: self]))
     {:noreply, %{state | pid_blinking_lights: pid_blinking_lights}}
   end
 
-  def handle_cast(msg = {:puts, str}, state = %{pid_blinking_lights: pid_blinking_lights}) do
+  def handle_cast(msg = {:puts, _}, state = %{pid_blinking_lights: pid_blinking_lights}) do
     GenServer.cast(pid_blinking_lights, msg)
     {:noreply, state}
   end

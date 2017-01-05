@@ -18,7 +18,7 @@ defmodule UpsideDownLeds.TwitterListener do
   ## server callbacks
   ##
 
-  def init({pid_server: pid_server}) do
+  def init([pid_server: pid_server]) do
     pid = spawn(fn ->
       stream = ExTwitter.stream_filter(track: "@UpsideDownLEDs")
       Logger.info "starting stream filter"
