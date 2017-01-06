@@ -10,15 +10,15 @@ defmodule UpsideDownLeds.TwitterListener do
   @doc """
   Starts the server.
   """
-  def start_link(options) do
-    GenServer.start_link(__MODULE__, options, name: __MODULE__)
+  def start_link(_options) do
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   ##
   ## server callbacks
   ##
 
-  def init([pid_server: pid_server]) do
+  def init do
     pid = spawn(fn ->
       stream = ExTwitter.stream_filter(track: "@UpsideDownLEDs")
       Logger.info "starting stream filter"
@@ -30,7 +30,7 @@ defmodule UpsideDownLeds.TwitterListener do
         case Regex.run(~r/\A@UpsideDownLEDs\s+(.+)\z/i, tweet.text) do
           [_, text] ->
             # IO.puts "message from the Upside Down: #{text}"
-            GenServer.cast(pid_server, {:puts, text})
+            UpsideDownLeds.BlinkingLights.puts text
           _ ->
             # ignore this tweet
             Logger.info "discarded tweet: #{tweet.text}"
