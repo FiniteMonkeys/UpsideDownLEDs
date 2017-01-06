@@ -10,7 +10,7 @@ defmodule UpsideDownLeds.TwitterListener do
   @doc """
   Starts the server.
   """
-  def start_link(_options) do
+  def start_link do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
@@ -18,7 +18,7 @@ defmodule UpsideDownLeds.TwitterListener do
   ## server callbacks
   ##
 
-  def init do
+  def init(_) do
     pid = spawn(fn ->
       stream = ExTwitter.stream_filter(track: "@UpsideDownLEDs")
       Logger.info "starting stream filter"
