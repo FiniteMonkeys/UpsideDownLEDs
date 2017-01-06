@@ -18,8 +18,9 @@ defmodule UpsideDownLeds.Supervisor do
 
   def init(:ok) do
     children = [
-      worker(UpsideDownLeds.Server, [self])
+      worker(UpsideDownLeds.TwitterListener, []),
+      worker(UpsideDownLeds.BlinkingLights, [])
     ]
-    supervise(children, strategy: :one_for_all)
+    supervise(children, strategy: :one_for_one)
   end
 end
