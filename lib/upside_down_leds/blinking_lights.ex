@@ -55,7 +55,7 @@ defmodule UpsideDownLeds.BlinkingLights do
         "X" => 12,
         "Y" => 16,
         "Z" => 20,
-      } |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = Gpio.start_link(pin_no, :output); {letter, pid} end)
+      } |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output); {letter, pid} end)
         |> Enum.into(%{})
     }
   end
@@ -78,9 +78,9 @@ defmodule UpsideDownLeds.BlinkingLights do
   end
 
   defp blink(pid, delay_during \\ @delay_during, delay_after \\ @delay_after) do
-    Gpio.write(pid, 1)
+    ElixirALE.GPIO.write(pid, 1)
     :timer.sleep(delay_during)
-    Gpio.write(pid, 0)
+    ElixirALE.GPIO.write(pid, 0)
     :timer.sleep(delay_after)
   end
 end

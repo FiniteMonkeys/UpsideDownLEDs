@@ -1,8 +1,8 @@
 defmodule SmokeTest do
   defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
-    Gpio.write(pid, 1)
+    ElixirALE.GPIO.write(pid, 1)
     :timer.sleep(delay_during)
-    Gpio.write(pid, 0)
+    ElixirALE.GPIO.write(pid, 0)
     :timer.sleep(delay_after)
   end
 
@@ -36,7 +36,7 @@ defmodule SmokeTest do
       "Z" => 20,
     }
 
-    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = Gpio.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
+    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
 
     ?A..?Z |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid, 300, 0); end)
 
