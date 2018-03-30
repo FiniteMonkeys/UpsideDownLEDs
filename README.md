@@ -43,7 +43,7 @@ The assignment of pins to LEDs was driven by the lengths of the jumper wires I h
 
 ## The software
 
-I started with a fresh install of [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) (Jessie with Pixel, September 2016).
+A full description of how I set up the initial disk image can be found in `Base Image.md`.
 
 ### Step 1: The smoke test
 
@@ -89,43 +89,6 @@ When I run this on the Raspberry Pi (via `python smoke_test.py`), each of the LE
 ### Step 2: Elixir
 
 Python's all well and good, but could I do the same thing using Elixir?
-
-Unlike Python, Raspbian doesn't come with Elixir installed. The available APT packages for Erlang and Elixir are out of date, so I built fresh from source.
-
-```bash
-# make sure the apt cache is up to date
-$ sudo apt-get update
-
-# install dependencies
-$ sudo apt-get install unzip m4 libcurses5-dev libssl-dev
-
-# download, compile, and install Erlang
-$ curl -LO http://erlang.org/download/otp_src_19.1.tar.gz
-$ tar xvfz otp_src_19.1.tar.gz
-$ cd otp_src_19.1/
-$ export ERL_TOP=`pwd`
-$ ./configure --without-odbc --without-wx
-$ make
-$ make release_tests
-$ cd release/tests/test_server
-$ $ERL_TOP/bin/erl -s ts install -s ts smoke_test batch -s init stop
-$ sudo make install
-
-# download a precompiled elixir release
-$ curl -LO https://github.com/elixir-lang/elixir/releases/download/v1.3.4/Precompiled.zip
-$ unzip Precompiled.zip -d elixir
-$ sudo mv elixir /usr/local
-# add this to .bash_profile so it's always available
-$ export PATH=/usr/local/elixir/bin:$PATH
-
-$ iex
-Erlang/OTP 19 [erts-8.1] [source] [async-threads:10] [hipe] [kernel-poll:false]
-
-Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> 2 + 3
-5
-iex(2)>
-```
 
 To access the GPIO pins, I employed [elixir_ale](https://github.com/fhunleth/elixir_ale). After installing it as a dependency in `mix.exs` and running `mix deps.get`, it was straightforward to use.
 
