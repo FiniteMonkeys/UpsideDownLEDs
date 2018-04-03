@@ -1,48 +1,55 @@
 defmodule SmokeTest do
   defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
-    ElixirALE.GPIO.write(pid, 1)
-    :timer.sleep(delay_during)
     ElixirALE.GPIO.write(pid, 0)
+    :timer.sleep(delay_during)
+    ElixirALE.GPIO.write(pid, 1)
     :timer.sleep(delay_after)
   end
 
   def go do
     pin_defs = %{
-      "A" => 4,
-      "B" => 2,
-      "C" => 27,
-      "D" => 22,
-      "E" => 26,
-      "F" => 19,
-      "G" => 13,
-      "H" => 6,
-      "I" => 5,
-      "J" => 11,
-      "K" => 9,
-      "L" => 10,
-      "M" => 3,
-      "N" => 14,
-      "O" => 15,
-      "P" => 8,
-      "Q" => 18,
-      "R" => 23,
-      "S" => 21,
-      "T" => 17,
-      "U" => 24,
-      "V" => 25,
-      "W" => 7,
-      "X" => 12,
-      "Y" => 16,
-      "Z" => 20,
+      "A" => 13,
+      "B" => 16,
+      "C" => 21,
+      "D" =>  4,
+      "E" => 17,
+      "F" => 20,
+      "G" => 12,
+      "H" => 19,
+      "I" =>  2,
+      "J" => 25,
+      "K" =>  3,
+      "L" => 14,
+      "M" => 15,
+      "N" =>  5,
+      "O" =>  6,
+      "P" => 11,
+      "Q" => 27,
+      "R" =>  7,
+      "S" => 24,
+      "T" =>  8,
+      "U" => 23,
+      "V" => 26,
+      "W" => 18,
+      "X" => 22,
+      "Y" =>  9,
+      "Z" => 10,
     }
 
-    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
+    pin_map = pin_defs
+              |> Enum.map(fn {letter, pin_no} ->
+                            {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output)
+                            {letter, pid}
+                          end)
+              |> Enum.into(%{})
 
-    ?A..?Z |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid, 300, 0); end)
+    pin_map |> Enum.each(fn {_, pid} -> ElixirALE.GPIO.write(pid, 1) end)
+
+    ?A..?Z |> Enum.each(fn letter -> pin_map[to_string([letter])] |> blink(300, 0); end)
 
     :timer.sleep(2000)
 
-    "HELLO" |> String.to_charlist |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid); end)
+    "HELLO" |> String.to_charlist |> Enum.each(fn letter -> pin_map[to_string([letter])] |> blink(); end)
   end
 end
 
