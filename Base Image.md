@@ -53,7 +53,7 @@ Reboot to pick up any changes.
 ```bash
 $ sudo apt-get update
 # $ sudo apt-get install -y autoconf curl git libncurses5-dev libreadline-dev libssl-dev libtool m4 unzip
-$ sudo apt-get install -y curl git unzip
+$ sudo apt-get install -y build-essential curl git unzip
 ```
 
 Now would be a good time to make an image from the microSD card. Power down the Raspberry Pi, remove the microSD card,
@@ -76,7 +76,7 @@ and Elixir 1.6.1.
 $ wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
 $ sudo dpkg -i erlang-solutions_1.0_all.deb
 $ sudo apt-get update
-$ sudo apt-get install erlang-nox elixir
+$ sudo apt-get install erlang-nox erlang-dev elixir
 ```
 
 > Note: https://www.erlang-solutions.com/resources/download.html talks about a package named `erlang-mini`, but that doesn't appear to exist.

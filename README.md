@@ -93,11 +93,11 @@ Python's all well and good, but could I do the same thing using Elixir?
 To access the GPIO pins, I employed [elixir_ale](https://github.com/fhunleth/elixir_ale). After installing it as a dependency in `mix.exs` and running `mix deps.get`, it was straightforward to use.
 
 ```elixir
-iex(1)> {:ok, pid} = Gpio.start_link(4, :output)
+iex(1)> {:ok, pid} = ElixirALE.GPIO.start_link(4, :output)
 {:ok, #PID<0.235.0>}
-iex(2)> Gpio.write(pid, 1)
+iex(2)> ElixirALE.GPIO.write(pid, 1)
 :ok
-iex(3)> Gpio.write(pid, 0)
+iex(3)> ElixirALE.GPIO.write(pid, 0)
 :ok
 iex(4)>
 ```
@@ -107,9 +107,9 @@ You can't see it from where you're sitting (unless you're playing along at home 
 ```elixir
 defmodule SmokeTest do
   defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
-    Gpio.write(pid, 1)
+    ElixirALE.GPIO.write(pid, 1)
     :timer.sleep(delay_during)
-    Gpio.write(pid, 0)
+    ElixirALE.GPIO.write(pid, 0)
     :timer.sleep(delay_after)
   end
 
@@ -143,7 +143,7 @@ defmodule SmokeTest do
       "Z" => 20,
     }
 
-    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = Gpio.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
+    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
 
     ?A..?Z |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid, 300, 0); end)
 
