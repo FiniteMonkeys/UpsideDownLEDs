@@ -8,15 +8,16 @@ pindefs = {
 }
 
 def blink(pin, delay_during=0.5, delay_after=0.5):
-    GPIO.output(pin, GPIO.HIGH)
-    time.sleep(delay_during)
     GPIO.output(pin, GPIO.LOW)
+    time.sleep(delay_during)
+    GPIO.output(pin, GPIO.HIGH)
     time.sleep(delay_after)
 
 GPIO.setmode(GPIO.BCM)
 
 for pin in pindefs.values():
     GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.HIGH)
 
 for letter in list(string.ascii_uppercase):
     blink(pindefs[letter], 0.3, 0)
