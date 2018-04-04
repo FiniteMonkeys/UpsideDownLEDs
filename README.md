@@ -4,11 +4,11 @@
 
 It started, as one may suppose things do these days, with a seemingly innocent exchange on [Slack](https://kcelixir.slack.com/).
 
-![alt text](documentation/images/alan.png)
+![I really want to make "Stranger Things Christmas lights" just to do it](documentation/images/alan.png)
 
 ...which led to...
 
-![alt text](documentation/images/craig.png)
+![I'm imagining a Pi running Nerves and Twitter client code](documentation/images/craig.png)
 
 ### Wait, what?
 
@@ -18,11 +18,13 @@ That's all you get from me. Seriously, if you want to know more, go watch it.
 
 ### So, what you're saying is...
 
-![alt text](documentation/images/jordan.png)
+![All the pieces are in place for an LED Ouija board](documentation/images/jordan.png)
 
 Sort of. The reality is (hopefully) going to turn out to be much more interesting.
 
-## The hardware
+## Iteration 0
+
+### The hardware
 
 I already had everything I needed on hand.
 
@@ -41,7 +43,7 @@ Twenty-six letters in the English alphabet means twenty-six LEDs. Conveniently, 
 
 The assignment of pins to LEDs was driven by the lengths of the jumper wires I had available and the layout of GPIO pins on the breakout board. If I ever get around to making a PCB for this, I'll make it less haphazard.
 
-## The software
+### The software
 
 A full description of how I set up the initial disk image can be found in `Base Image.md`.
 
@@ -157,6 +159,26 @@ SmokeTest.go
 ```
 
 Running this (via `mix run smoke_test.exs`) produces the same output as the Python script above.
+
+## Iteration 1
+
+Now that I had a proof of concept, it was time to make it better looking and more permanent.
+
+### The hardware
+
+The Raspberry Pi remains the same, but I added a [terminal block breakout HAT](https://www.adafruit.com/product/2711) to better secure the wires.
+My daughter Abigail ([@ItsIronicallyUs](https://twitter.com/ItsIronicallyUs)) recreated the wall from the show, into which I drilled holes and mounted the LEDs.
+
+![picture of the front of the wall](documentation/images/front.png)
+![picture of the back of the wall](documentation/images/back.png)
+
+### The software
+
+The only change to the initial software was remapping the GPIO pins, as I hadn't preserved the old mapping when I wired up the new one.
+
+
+
+
 
 ### Step 3: Adding a GenServer
 
