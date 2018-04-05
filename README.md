@@ -22,6 +22,17 @@ That's all you get from me. Seriously, if you want to know more, go watch it.
 
 Sort of. The reality is (hopefully) going to turn out to be much more interesting.
 
+## Table of Contents
+
+* [Iteration 0](#iteration-0)
+  * [Step 1: The smoke test](#step-1-the-smoke-test)
+  * [Step 2: Elixir](#step-2-elixir)
+* [Iteration 1](#iteration-1)
+  * [Step 3: Adding a GenServer](#step-3-adding-a-genserver)
+  * [Step 4: The ghost in the machine](#step-4-the-ghost-in-the-machine)
+  * [Step 5: Putting together the pieces](#step-5-putting-together-the-pieces)
+  * [Step 6: Nerves](#step-6-nerves)
+
 ## Iteration 0
 
 ### The hardware
