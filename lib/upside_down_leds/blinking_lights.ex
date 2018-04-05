@@ -30,38 +30,42 @@ defmodule UpsideDownLeds.BlinkingLights do
   @delay_nonprinting  1000
 
   def init(:ok) do
-    {
-      :ok,
-      %{
-        "A" => 13,
-        "B" => 16,
-        "C" => 21,
-        "D" =>  4,
-        "E" => 17,
-        "F" => 20,
-        "G" => 12,
-        "H" => 19,
-        "I" =>  2,
-        "J" => 25,
-        "K" =>  3,
-        "L" => 14,
-        "M" => 15,
-        "N" =>  5,
-        "O" =>  6,
-        "P" => 11,
-        "Q" => 27,
-        "R" =>  7,
-        "S" => 24,
-        "T" =>  8,
-        "U" => 23,
-        "V" => 26,
-        "W" => 18,
-        "X" => 22,
-        "Y" =>  9,
-        "Z" => 10,
-      } |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output); {letter, pid} end)
-        |> Enum.into(%{})
-    }
+    pin_map = %{
+      "A" => 13,
+      "B" => 16,
+      "C" => 21,
+      "D" =>  4,
+      "E" => 17,
+      "F" => 20,
+      "G" => 12,
+      "H" => 19,
+      "I" =>  2,
+      "J" => 25,
+      "K" =>  3,
+      "L" => 14,
+      "M" => 15,
+      "N" =>  5,
+      "O" =>  6,
+      "P" => 11,
+      "Q" => 27,
+      "R" =>  7,
+      "S" => 24,
+      "T" =>  8,
+      "U" => 23,
+      "V" => 26,
+      "W" => 18,
+      "X" => 22,
+      "Y" =>  9,
+      "Z" => 10,
+    } |> Enum.map(fn {letter, pin_no} ->
+                    {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output)
+                    {letter, pid}
+                  end)
+      |> Enum.into(%{})
+
+    pin_map |> Enum.each(fn {_, pid} -> ElixirALE.GPIO.write(pid, 1) end)
+
+    {:ok, pin_map}
   end
 
   def handle_cast({:puts, str}, pin_map) do

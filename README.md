@@ -176,10 +176,6 @@ My daughter Abigail ([@ItsIronicallyUs](https://twitter.com/ItsIronicallyUs)) re
 
 The only change to the initial software was remapping the GPIO pins, as I hadn't preserved the old mapping when I wired up the new one.
 
-
-
-
-
 ### Step 3: Adding a GenServer
 
 I wanted this code to eventually be persistent and long-lived, so it seemed like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/blinking_lights.ex`.
@@ -193,8 +189,6 @@ iex(3)> UpsideDownLeds.BlinkingLights.puts(lights, "ELEVEN LOVES EGGOS")
 :ok
 iex(4)>
 ```
-
-There's blinking lights. Trust me&mdash;they're the best blinking lights. They're yuuge.
 
 ### Step 4: The ghost in the machine
 
