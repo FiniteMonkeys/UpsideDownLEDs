@@ -282,3 +282,70 @@ iex(1)> {:ok, pid} = UpsideDownLeds.start_link
 {:ok, #PID<0.147.0>}
 iex(2)>
 ```
+
+### Step 6: Nerves
+
+At this point, the software has to be started manually. It would be better if it were self-contained and self-starting.
+We can do that with [Nerves](https://nerves-project.org).
+
+```bash
+$ brew install fwup squashfs coreutils
+$ mix archive.install hex nerves_bootstrap
+```
+
+Normally, you'd start from scratch with a new Nerves project. Since I've already started and all of my source files are in `git`, I'm going to create the project in my existing directory, let Nerves overwrite any files it wants, then use `git diff` to merge in the changes.
+
+```bash
+$ mix nerves.new . --app upside_down_leds
+```
+
+The most significant changes are the addition of the `UpsideDownLEDs.Application` module and a substantial reworking of `mix.exs`.
+
+`UpsideDownLEDs.Application` contains the entry point for the application. It does pretty much the same thing that was added to `UpsideDownLEDs.start_link/1` in the previous step, so that code can be moved here.
+
+The changes to `mix.exs` are unlike anything I've seen in any other Elixir project. Since Nerves supports a number of different hardware configurations, `mix.exs` is highly parameterized. For instance, the list of dependencies is built from three different pieces which depend on the targeted architecture and configuration.
+
+```elixir
+defp deps do
+  [{:nerves, "~> 0.9", runtime: false}] ++ deps(@target)
+end
+
+# Specify target specific dependencies
+defp deps("host"), do: []
+
+defp deps(target) do
+  [
+    {:elixir_ale, "~> 1.0"},
+    {:extwitter, "~> 0.9.1"},
+    {:nerves_runtime, "~> 0.4"},
+    {:oauth, git: "https://github.com/tim/erlang-oauth.git"},
+    {:shoehorn, "~> 0.2"},
+  ] ++ system(target)
+end
+
+defp system("rpi"), do: [{:nerves_system_rpi, ">= 0.0.0", runtime: false}]
+defp system("rpi0"), do: [{:nerves_system_rpi0, ">= 0.0.0", runtime: false}]
+defp system("rpi2"), do: [{:nerves_system_rpi2, ">= 0.0.0", runtime: false}]
+defp system("rpi3"), do: [{:nerves_system_rpi3, ">= 0.0.0", runtime: false}]
+defp system("bbb"), do: [{:nerves_system_bbb, ">= 0.0.0", runtime: false}]
+defp system("ev3"), do: [{:nerves_system_ev3, ">= 0.0.0", runtime: false}]
+defp system("qemu_arm"), do: [{:nerves_system_qemu_arm, ">= 0.0.0", runtime: false}]
+defp system("x86_64"), do: [{:nerves_system_x86_64, ">= 0.0.0", runtime: false}]
+defp system(target), do: Mix.raise "Unknown MIX_TARGET: #{target}"
+```
+
+Note that our dependencies from previous steps are only included if the target is not `"host"`. `elixir_ale` in particular doesn't make sense on anything other than an embedded Linux platform.
+
+> Note: The other two dependencies, `extwitter` and `oauth`, might be usable for testing on the host if `elixir_ale` can be mocked out somehow. I'm going to leave that for a future iteration.
+
+In previous versions of Nerves, you had to specify the target configuration when you created the project. Since it's now parameterized in `mix.exs`, you specify it when running `mix`.
+
+```bash
+$ MIX_TARGET=rpi mix deps.get
+$ MIX_TARGET=rpi mix firmware
+$ MIX_TARGET=rpi mix firmware.burn -d firmware.img
+```
+
+The first command should be self-explanatory. The second creates a firmware bundle file, and the third generates an image file suitable for writing to a microSD card. To do the actual writing, I like [Etcher](https://etcher.io).
+
+After writing the microSD card, I removed it from my host computer, inserted it in the Raspberry Pi, and powered up.
