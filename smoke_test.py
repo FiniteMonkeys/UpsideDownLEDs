@@ -3,20 +3,45 @@ import string
 import time
 
 pindefs = {
-    'A':  4, 'B':  2, 'C': 27, 'D': 22, 'E': 26, 'F': 19, 'G': 13, 'H':  6, 'I':  5, 'J': 11, 'K':  9, 'L': 10, 'M':  3,
-    'N': 14, 'O': 15, 'P':  8, 'Q': 18, 'R': 23, 'S': 21, 'T': 17, 'U': 24, 'V': 25, 'W':  7, 'X': 12, 'Y': 16, 'Z': 20,
+    'A': 13,
+    'B': 16,
+    'C': 21,
+    'D':  4,
+    'E': 17,
+    'F': 20,
+    'G': 12,
+    'H': 19,
+    'I':  2,
+    'J': 25,
+    'K':  3,
+    'L': 14,
+    'M': 15,
+    'N':  5,
+    'O':  6,
+    'P': 11,
+    'Q': 27,
+    'R':  7,
+    'S': 24,
+    'T':  8,
+    'U': 23,
+    'V': 26,
+    'W': 18,
+    'X': 22,
+    'Y':  9,
+    'Z': 10,
 }
 
 def blink(pin, delay_during=0.5, delay_after=0.5):
-    GPIO.output(pin, GPIO.HIGH)
-    time.sleep(delay_during)
     GPIO.output(pin, GPIO.LOW)
+    time.sleep(delay_during)
+    GPIO.output(pin, GPIO.HIGH)
     time.sleep(delay_after)
 
 GPIO.setmode(GPIO.BCM)
 
 for pin in pindefs.values():
     GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.HIGH)
 
 for letter in list(string.ascii_uppercase):
     blink(pindefs[letter], 0.3, 0)

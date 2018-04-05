@@ -28,8 +28,8 @@ defmodule UpsideDownLeds.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:elixir_ale, "~> 0.5.6"},
-      {:extwitter, "~> 0.7.0"},
+      {:elixir_ale, "~> 1.0"},
+      {:extwitter, "~> 0.9.1"},
       {:oauth, git: "https://github.com/tim/erlang-oauth.git"}
     ]
   end

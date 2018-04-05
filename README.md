@@ -2,13 +2,13 @@
 
 ## The backstory
 
-It started, as one may suppose things do these days, with a seemingly innocent exchange on [Slack](http://www.slack.com/).
+It started, as one may suppose things do these days, with a seemingly innocent exchange on [Slack](https://kcelixir.slack.com/).
 
-![alt text](https://www.evernote.com/l/AHdc-C2QJkNJMLoutZ0Unp-G9JcQ-C_7qeoB/image.png)
+![I really want to make "Stranger Things Christmas lights" just to do it](documentation/images/alan.png)
 
 ...which led to...
 
-![alt text](https://www.evernote.com/l/AHc_Wx0UxlhIQrnMFoxvrv-Kt7WWdmu_EXYB/image.png)
+![I'm imagining a Pi running Nerves and Twitter client code](documentation/images/craig.png)
 
 ### Wait, what?
 
@@ -18,11 +18,13 @@ That's all you get from me. Seriously, if you want to know more, go watch it.
 
 ### So, what you're saying is...
 
-![alt text](https://www.evernote.com/l/AHcvX99-cCBOUYOe5N60Sp-Cjyd1YSHJOAcB/image.png)
+![All the pieces are in place for an LED Ouija board](documentation/images/jordan.png)
 
-Sort of. The reality is going to turn out to be much more interesting.
+Sort of. The reality is (hopefully) going to turn out to be much more interesting.
 
-## The hardware
+## Iteration 0
+
+### The hardware
 
 I already had everything I needed on hand.
 
@@ -37,13 +39,13 @@ Twenty-six letters in the English alphabet means twenty-six LEDs. Conveniently, 
 
 (Multiplexing the GPIO pins to require fewer of them is left as an exercise for the reader, or possibly for version 2.)
 
-![picture of the breadboard](https://www.evernote.com/l/AHdGaO3zeEZKKqKnT3avZ5fb45XkTmazFw0/image.png)
+![picture of the breadboard](documentation/images/UpsideDownLEDs%20Prototype_bb.png)
 
 The assignment of pins to LEDs was driven by the lengths of the jumper wires I had available and the layout of GPIO pins on the breakout board. If I ever get around to making a PCB for this, I'll make it less haphazard.
 
-## The software
+### The software
 
-I started with a fresh install of [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) (Jessie with Pixel, September 2016).
+A full description of how I set up the initial disk image can be found in `Base Image.md`.
 
 ### Step 1: The smoke test
 
@@ -90,51 +92,14 @@ When I run this on the Raspberry Pi (via `python smoke_test.py`), each of the LE
 
 Python's all well and good, but could I do the same thing using Elixir?
 
-Unlike Python, Raspbian doesn't come with Elixir installed. The available APT packages for Erlang and Elixir are out of date, so I built fresh from source.
-
-```bash
-# make sure the apt cache is up to date
-$ sudo apt-get update
-
-# install dependencies
-$ sudo apt-get install unzip m4 libcurses5-dev libssl-dev
-
-# download, compile, and install Erlang
-$ curl -LO http://erlang.org/download/otp_src_19.1.tar.gz
-$ tar xvfz otp_src_19.1.tar.gz
-$ cd otp_src_19.1/
-$ export ERL_TOP=`pwd`
-$ ./configure --without-odbc --without-wx
-$ make
-$ make release_tests
-$ cd release/tests/test_server
-$ $ERL_TOP/bin/erl -s ts install -s ts smoke_test batch -s init stop
-$ sudo make install
-
-# download a precompiled elixir release
-$ curl -LO https://github.com/elixir-lang/elixir/releases/download/v1.3.4/Precompiled.zip
-$ unzip Precompiled.zip -d elixir
-$ sudo mv elixir /usr/local
-# add this to .bash_profile so it's always available
-$ export PATH=/usr/local/elixir/bin:$PATH
-
-$ iex
-Erlang/OTP 19 [erts-8.1] [source] [async-threads:10] [hipe] [kernel-poll:false]
-
-Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> 2 + 3
-5
-iex(2)>
-```
-
 To access the GPIO pins, I employed [elixir_ale](https://github.com/fhunleth/elixir_ale). After installing it as a dependency in `mix.exs` and running `mix deps.get`, it was straightforward to use.
 
 ```elixir
-iex(1)> {:ok, pid} = Gpio.start_link(4, :output)
+iex(1)> {:ok, pid} = ElixirALE.GPIO.start_link(4, :output)
 {:ok, #PID<0.235.0>}
-iex(2)> Gpio.write(pid, 1)
+iex(2)> ElixirALE.GPIO.write(pid, 1)
 :ok
-iex(3)> Gpio.write(pid, 0)
+iex(3)> ElixirALE.GPIO.write(pid, 0)
 :ok
 iex(4)>
 ```
@@ -144,9 +109,9 @@ You can't see it from where you're sitting (unless you're playing along at home 
 ```elixir
 defmodule SmokeTest do
   defp blink(pid, delay_during \\ 500, delay_after \\ 500) do
-    Gpio.write(pid, 1)
+    ElixirALE.GPIO.write(pid, 1)
     :timer.sleep(delay_during)
-    Gpio.write(pid, 0)
+    ElixirALE.GPIO.write(pid, 0)
     :timer.sleep(delay_after)
   end
 
@@ -180,7 +145,7 @@ defmodule SmokeTest do
       "Z" => 20,
     }
 
-    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = Gpio.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
+    pin_map = pin_defs |> Enum.map(fn pair -> {letter, pin_no} = pair; {:ok, pid} = ElixirALE.GPIO.start_link(pin_no, :output); {letter, pid} end) |> Enum.into(%{})
 
     ?A..?Z |> Enum.each(fn letter -> pid = pin_map[to_string([letter])]; blink(pid, 300, 0); end)
 
@@ -195,6 +160,22 @@ SmokeTest.go
 
 Running this (via `mix run smoke_test.exs`) produces the same output as the Python script above.
 
+## Iteration 1
+
+Now that I had a proof of concept, it was time to make it better looking and more permanent.
+
+### The hardware
+
+The Raspberry Pi remains the same, but I added a [terminal block breakout HAT](https://www.adafruit.com/product/2711) to better secure the wires.
+My daughter Abigail ([@ItsIronicallyUs](https://twitter.com/ItsIronicallyUs)) recreated the wall from the show, into which I drilled holes and mounted the LEDs.
+
+![picture of the front of the wall](documentation/images/front.png)
+![picture of the back of the wall](documentation/images/back.png)
+
+### The software
+
+The only change to the initial software was remapping the GPIO pins, as I hadn't preserved the old mapping when I wired up the new one.
+
 ### Step 3: Adding a GenServer
 
 I wanted this code to eventually be persistent and long-lived, so it seemed like a good idea at this point to make it into a server. I borrowed heavily from [the GenServer example on the Elixir web site](http://elixir-lang.org/getting-started/mix-otp/genserver.html); the result is in `lib/upside_down_leds/blinking_lights.ex`.
@@ -208,8 +189,6 @@ iex(3)> UpsideDownLeds.BlinkingLights.puts(lights, "ELEVEN LOVES EGGOS")
 :ok
 iex(4)>
 ```
-
-There's blinking lights. Trust me&mdash;they're the best blinking lights. They're yuuge.
 
 ### Step 4: The ghost in the machine
 
