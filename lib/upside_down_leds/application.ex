@@ -10,7 +10,7 @@ defmodule UpsideDownLeds.Application do
     {:ok, lights} = UpsideDownLeds.BlinkingLights.start_link
 
     Logger.info("Starting TwitterListener process")
-    {:ok, twitter} = UpsideDownLeds.TwitterListener.start_link({ fn text -> UpsideDownLeds.BlinkingLights.puts(lights, text) end })
+    {:ok, _twitter} = UpsideDownLeds.TwitterListener.start_link({ fn text -> UpsideDownLeds.BlinkingLights.puts(lights, text) end })
 
     {:ok, self()}
   end
