@@ -1,7 +1,11 @@
 defmodule UpsideDownLeds.TwitterListener do
   use GenServer
 
+  require Logger
+
+  ##
   ## client API
+  ##
 
   @doc """
   Starts the server.
@@ -10,7 +14,9 @@ defmodule UpsideDownLeds.TwitterListener do
     GenServer.start_link(__MODULE__, options, [])
   end
 
+  ##
   ## server callbacks
+  ##
 
   def init(options \\ {}) do
     puts_fn = if tuple_size(options) > 0 and is_function(elem(options, 0)) do
@@ -21,7 +27,7 @@ defmodule UpsideDownLeds.TwitterListener do
 
     pid = spawn(fn ->
       stream = ExTwitter.stream_filter(track: "@UpsideDownLEDs")
-      IO.puts "starting stream filter"
+      Logger.info "starting stream filter"
       for tweet <- stream do
         ##
         ## The tweets we're interested in start with "@UpsideDownLEDs ". Everything else can be discarded.
@@ -33,7 +39,7 @@ defmodule UpsideDownLeds.TwitterListener do
             puts_fn.(text)
           _ ->
             # ignore this tweet
-            IO.puts "discarded tweet: #{tweet.text}"
+            Logger.info "discarded tweet: #{tweet.text}"
         end
       end
     end)
@@ -43,7 +49,7 @@ defmodule UpsideDownLeds.TwitterListener do
   def terminate(_reason, state) do
     cond do
       %{pid: pid} = state ->
-        IO.puts "stopping stream filter"
+        Logger.info "stopping stream filter"
         ExTwitter.stream_control(pid, :stop)
     end
   end
